@@ -1,0 +1,11 @@
+#questions{
+    font-family: 'Righteous', cursive;
+}
+.button-node-question{
+    width: 45px !important;
+    height: 45px !important;
+}
+.input-node-question{
+    width: 45px !important;
+    display: inline !important;
+}
