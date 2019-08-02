@@ -1,10 +1,10 @@
 import HomePage from "./modules/home";
-import LoginPage from "./modules/auth/login";
-import RegisterPage from "./modules/auth/register";
 import errors from "./modules/errors";
 import Root from "./modules/Root";
 import Question from "./modules/questions";
 import UserPage from "./modules/userPage";
+import LoginCoffee from "./modules/coffee/login";
+import CoffeePage from "./modules/coffee";
 
 const routes = [
     {
@@ -16,20 +16,21 @@ const routes = [
                 exact: true
             },
             {
-                path: "/login",
-                component: LoginPage,
-                exact: true
-            },
-            {
                 path: "/questions",
                 component: Question,
                 exact: true
             },
             {
-                path: "/register",
-                component: RegisterPage,
+                path: "/coffee/login",
+                component: LoginCoffee,
                 exact: true
             },
+            {
+                path: "/coffee",
+                component: CoffeePage,
+                exact: true
+            },
+
             {
                 path: "/trang_chu",
                 component: UserPage,
