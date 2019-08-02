@@ -30,6 +30,12 @@ const routes = [
                 component: CoffeePage,
                 exact: true
             },
+      
+            // {
+            //     path: "/modals",
+            //     component: ModalPage,
+            //     exact: true
+            // },
 
             {
                 path: "/trang_chu",
