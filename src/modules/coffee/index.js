@@ -35,7 +35,6 @@ class CoffeePage extends React.Component {
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
                             <h1 className="title">Client</h1>
                             <h3 className="sumMoney">300000đ</h3>
-                    
                             <Row>
                                 <Col>
                                     <div className="wrap">
