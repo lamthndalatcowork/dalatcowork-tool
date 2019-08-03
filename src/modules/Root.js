@@ -5,7 +5,6 @@ class Root extends React.Component {
     render() {
         return (
             <Fragment>
-                <h1>Dalatcowork</h1>
                 {renderRoutes(this.props.route.routes)}
             </Fragment>
         )
