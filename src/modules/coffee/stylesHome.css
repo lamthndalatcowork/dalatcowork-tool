@@ -1,0 +1,36 @@
+.wrap{
+    overflow-y: scroll;
+    height: 57vh;
+    border: 1px solid rgb(223, 215, 215);
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.title{
+    color: red;
+    font-size: 40px;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+.sumMoney{
+    font-size: 35px;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.add{
+    width: 70px;
+    justify-items: center;
+}
+
+.sub{
+    width: 70px;
+    
+}
+.button{
+    width: 100%;
+    justify-content: center;
+    justify-items: center;
+}
