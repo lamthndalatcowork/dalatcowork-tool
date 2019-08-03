@@ -33,8 +33,8 @@ class CoffeePage extends React.Component {
                     {/* Client */}
                     <Row className="client">
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
-                            <h1 className="title">Client</h1>
-                            <h3 className="sumMoney">300000đ</h3>
+                            <h1 className="title">CLIENT</h1>
+                            <h2 className="sumMoney">300000đ</h2>
                             <Row>
                                 <Col>
                                     <div className="wrap">
@@ -102,8 +102,8 @@ class CoffeePage extends React.Component {
                      {/* Admin */}
                      <Row className="admin">
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
-                            <h1 className="title">Admin</h1>
-                            <h3 className="sumMoney">300000đ</h3>
+                            <h1 className="title">ADMIN</h1>
+                            <h2 className="sumMoney">300000đ</h2>
                             <Row>
                                 <Col>
                                     <div className="wrap">
@@ -164,8 +164,11 @@ class CoffeePage extends React.Component {
                                     </div>
                                 </Col>
                             </Row>
-                            <Button color="warning" onClick={this.addFunction} className="add">+</Button>{' '}
-                            <Button color="danger" onClick={this.subFunction} className="sub">-</Button>{' '}
+                            <div className="button">
+                                <Button color="warning" onClick={this.addFunction} className="add">+</Button>{' '}
+                                <Button color="danger" onClick={this.subFunction} className="sub">-</Button>{' '}
+                            </div>
+                            
                             {/* Modal */}
                             <div>   
                                 <Modal isOpen={this.state.add} toggle={this.addFunction} className={this.props.className}>
@@ -185,7 +188,7 @@ class CoffeePage extends React.Component {
 
                             <div>   
                                 <Modal isOpen={this.state.sub} toggle={this.subFunction} className={this.props.className}>
-                                    <ModalHeader toggle={this.subFunction}>THÊM QUỶ</ModalHeader>
+                                    <ModalHeader toggle={this.subFunction}>TRỪ QUỶ</ModalHeader>
                                     <ModalBody>
                                         <Label for="">Mô tả</Label>
                                         <Input type="textarea" rows={3} />
