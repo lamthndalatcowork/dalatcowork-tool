@@ -1,5 +1,5 @@
 import React, {Fragment} from "react";
-import styles from "./styles.css";
+import styles from "./stylesHome.css";
 import {Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 class CoffeePage extends React.Component {
 
@@ -201,7 +201,7 @@ class CoffeePage extends React.Component {
                                     </ModalFooter>
                                 </Modal>
                             </div>
-
+                            
                         </Col>
                     </Row>
                     <hr/>
