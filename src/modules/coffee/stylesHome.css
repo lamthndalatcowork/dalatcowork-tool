@@ -1,3 +1,6 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
 .wrap{
     overflow-y: scroll;
     height: 57vh;

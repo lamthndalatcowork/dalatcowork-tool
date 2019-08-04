@@ -1,31 +1,93 @@
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 import styles from "./stylesHome.css";
-import {Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import { Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import {GET_LOGS_MONEY_COMPLETE, 
+    GET_LOGS_MONEY_REQUEST,
+    POST_CREATE_LOG_MONEY_REQUEST,
+    POST_CREATE_LOG_MONEY_COMPLETE} from "../../actionTypes";
+    
+import { connect } from "react-redux";
+import { getLogsMoney,postCreateLogMoney} from "./action"
+
 class CoffeePage extends React.Component {
 
-    state = {
-
-    };
     constructor(props) {
         super(props);
         this.state = {
+            logs: [],
+            money: 0,
             add: false,
-            sub:false,
+            sub: false,
         };
     }
 
-    subFunction=()=> {
+
+    componentWillMount() {
+        const { dispatch } = this.props;
+        dispatch(getLogsMoney())
+    }
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps.coffee);
+
+        switch (nextProps.coffee.type) {
+            case GET_LOGS_MONEY_REQUEST:
+                this.setState({ isFetching: nextProps.coffee.isFetching});
+                console.log(nextProps.coffee.result);
+                break;
+            case GET_LOGS_MONEY_COMPLETE:
+                this.setState({ logs: nextProps.coffee.result.data.logs, money:nextProps.coffee.result.data.money  });
+
+                break;
+            default:
+                return;
+        }
+    }
+
+    subFunction = () => {
         this.setState(prevState => ({
             sub: !prevState.sub
         }));
     }
-    addFunction =()=> {
+    addFunction = () => {
         this.setState(prevState => ({
             add: !prevState.add
         }));
     }
+    onAddBtnClick = ()=>{
 
-    
+        let describe = document.getElementById("describeAdd").value;
+        let money =parseInt(document.getElementById("moneyAdd").value);
+        let type = "IN_CREATE";
+
+        const { dispatch } = this.props;
+
+        if(describe!=null && money!=null){
+            let payload = {
+                "caption": describe,
+                "money": money,
+                "type": type
+            }
+            dispatch(postCreateLogMoney(payload)); 
+        }
+        
+        
+    }
+
+    onSubBtnClick = ()=>{
+
+        let describe = document.getElementById("describeSub").value;
+        let money =parseInt(document.getElementById("moneySub").value);
+        let type = "REDUCE"
+        const { dispatch } = this.props;
+        if(describe!=null && money!=null){
+            let payload = {
+                "caption": describe,
+                "money": money,
+                "type": type
+            }
+            dispatch(postCreateLogMoney(payload)); 
+        }
+    }
     render() {
         return (
             <Fragment>
@@ -34,133 +96,85 @@ class CoffeePage extends React.Component {
                     <Row className="client">
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
                             <h1 className="title">CLIENT</h1>
-                            <h2 className="sumMoney">300000đ</h2>
+                            <h2 className="sumMoney">{this.state.money}đ</h2>
                             <Row>
                                 <Col>
                                     <div className="wrap">
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="warning">
-                                            Thêm quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Anh T.Anh đã thêm vào quỷ</div>
-                                                <div className={styles.money}>+300000đ</div>
-                                            </ToastBody>
-                                        </Toast>  
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="warning">
-                                            Thêm quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Anh T.Anh đã thêm vào quỷ</div>
-                                                <div className={styles.money}>+300000đ</div>
-                                            </ToastBody>
-                                        </Toast>  
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>                 
+                                        {
+                                            this.state.logs.map((items) => {
+                                                if (items.type == "REDUCE") {
+                                                    return <div>
+                                                        <Toast>
+                                                            <ToastHeader icon="danger">
+                                                                Trừ quỷ
+                                                            </ToastHeader>
+                                                            <ToastBody>
+                                                                <div className={styles.describe}>{items.caption}</div>
+                                                                <div className={styles.money}>-{items.money}đ</div>
+                                                            </ToastBody>
+                                                        </Toast>
+                                                    </div>
+                                                } else if (items.type == "IN_CREATE") {
+                                                    return <div>
+                                                        <Toast>
+                                                            <ToastHeader icon="warning">
+                                                                THÊM QUỶ
+                                                            </ToastHeader>
+                                                            <ToastBody>
+                                                                <div className={styles.describe}>{items.caption}</div>
+                                                                <div className={styles.money}>+{items.money}đ</div>
+                                                            </ToastBody>
+                                                        </Toast>
+                                                    </div>
+                                                }
+                                            })
+                                        }
                                     </div>
                                 </Col>
                             </Row>
-                            <hr/>
+                            <hr />
                         </Col>
                     </Row>
-                   
-                     {/* Admin */}
-                     <Row className="admin">
+
+                    {/* Admin */}
+                    <Row className="admin">
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
                             <h1 className="title">ADMIN</h1>
-                            <h2 className="sumMoney">300000đ</h2>
+                            <h2 className="sumMoney">{this.state.money}đ</h2>
                             <Row>
                                 <Col>
                                     <div className="wrap">
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="warning">
-                                            Thêm quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Anh T.Anh đã thêm vào quỷ</div>
-                                                <div className={styles.money}>+300000đ</div>
-                                            </ToastBody>
-                                        </Toast>  
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="warning">
-                                            Thêm quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Anh T.Anh đã thêm vào quỷ</div>
-                                                <div className={styles.money}>+300000đ</div>
-                                            </ToastBody>
-                                        </Toast>  
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>
-                                        <Toast>
-                                            <ToastHeader icon="danger">
-                                            Trừ quỷ
-                                            </ToastHeader>
-                                            <ToastBody>
-                                                <div className={styles.describe}>Ngày 2/8/2019 tiền coffee</div>
-                                                <div className={styles.money}>-24000đ</div>
-                                            </ToastBody>
-                                        </Toast>                 
+                                        {
+                                            this.state.logs.map((items) => {
+                                                if (items.type == "IN_CREATE") {
+                                                    return <div>
+                                                        <Toast>
+                                                            <ToastHeader icon="warning">
+                                                                THÊM QUỶ
+                                                            </ToastHeader>
+                                                            <ToastBody>
+                                                                <div className={styles.describe}>{items.caption}</div>
+                                                                <div className={styles.money}>+{items.money}đ</div>
+                                                            </ToastBody>
+                                                        </Toast>
+                                                    </div>
+                                                }
+                                                else if (items.type == "REDUCE") {
+                                                    return <div>
+                                                        <Toast>
+                                                            <ToastHeader icon="danger">
+                                                                Trừ quỷ
+                                                            </ToastHeader>
+                                                            <ToastBody>
+                                                                <div className={styles.describe}>{items.caption}</div>
+                                                                <div className={styles.money}>-{items.money}đ</div>
+                                                            </ToastBody>
+                                                        </Toast>
+                                                    </div>
+                                                } 
+                                                
+                                            })
+                                        }
                                     </div>
                                 </Col>
                             </Row>
@@ -168,48 +182,51 @@ class CoffeePage extends React.Component {
                                 <Button color="warning" onClick={this.addFunction} className="add">+</Button>{' '}
                                 <Button color="danger" onClick={this.subFunction} className="sub">-</Button>{' '}
                             </div>
-                            
+
                             {/* Modal */}
-                            <div>   
+                            <div>
                                 <Modal isOpen={this.state.add} toggle={this.addFunction} className={this.props.className}>
                                     <ModalHeader toggle={this.addFunction}>THÊM QUỶ</ModalHeader>
                                     <ModalBody>
                                         <Label for="">Mô tả</Label>
-                                        <Input type="textarea" rows={3} />
+                                        <Input id="describeAdd" type="textarea" rows={3} />
+                                        
                                         <Label for="">Tiền</Label>
-                                        <Input type="number"/>
+                                        <Input id="moneyAdd" type="number" />
                                     </ModalBody>
 
                                     <ModalFooter>
-                                        <Button color="primary" onClick={this.addFunction}>Thêm</Button>{' '}
+                                        <Button id="btnAdd" color="primary" onClick={this.onAddBtnClick}>Thêm</Button>{' '}
                                     </ModalFooter>
                                 </Modal>
                             </div>
-
-                            <div>   
+                            <div>
                                 <Modal isOpen={this.state.sub} toggle={this.subFunction} className={this.props.className}>
                                     <ModalHeader toggle={this.subFunction}>TRỪ QUỶ</ModalHeader>
                                     <ModalBody>
                                         <Label for="">Mô tả</Label>
-                                        <Input type="textarea" rows={3} />
+                                        <Input id="describeSub" type="textarea" rows={3} />
                                         <Label for="">Tiền</Label>
-                                        <Input type="number"/>
+                                        <Input  id="moneySub" type="number" />
                                     </ModalBody>
 
                                     <ModalFooter>
-                                        <Button color="primary" onClick={this.subFunction}>Thêm</Button>{' '}
+                                        <Button color="primary" onClick={this.onSubBtnClick}>Thêm</Button>{' '}
                                     </ModalFooter>
                                 </Modal>
                             </div>
-                            
+
                         </Col>
                     </Row>
-                    <hr/>
+                    <hr />
                 </Container>
             </Fragment>
         )
     }
 }
 
+const mapStateToProps = (state) => ({
+    coffee: { ...state.coffee }
+});
 
-export default CoffeePage
+export default connect(mapStateToProps)(CoffeePage)
