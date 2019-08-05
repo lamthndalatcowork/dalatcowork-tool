@@ -1,7 +1,9 @@
 import {GET_LOGS_MONEY_COMPLETE, 
     GET_LOGS_MONEY_REQUEST,
     POST_CREATE_LOG_MONEY_REQUEST,
-    POST_CREATE_LOG_MONEY_COMPLETE} from "../../actionTypes";
+    POST_CREATE_LOG_MONEY_COMPLETE,
+    POST_LOGIN_REQUEST,
+    POST_LOGIN_COMPLETE} from "../../actionTypes";
 
 
 import API from "../../api";
@@ -38,4 +40,11 @@ export const postCreateLogMoney = (payload) => dispatch => {
     API.post('https://egame-websocket.herokuapp.com/coffee/logs',payload)
         .then((data)=>{dispatch(receiveRequest(POST_CREATE_LOG_MONEY_COMPLETE,data,null))})
         .catch(err=>{dispatch(receiveRequest(POST_CREATE_LOG_MONEY_COMPLETE,null,err))})
+};
+export const postLogin = (payload) => dispatch => {
+    console.log("payload: ", payload);
+    dispatch(startRequest(POST_LOGIN_REQUEST));
+    API.post('https://egame-websocket.herokuapp.com/coffee/login',payload)
+        .then((data)=>{dispatch(receiveRequest(POST_LOGIN_COMPLETE,data,null))})
+        .catch(err=>{dispatch(receiveRequest(POST_LOGIN_COMPLETE,null,err))})
 };

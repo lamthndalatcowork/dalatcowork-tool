@@ -7,13 +7,15 @@ import {GET_LOGS_MONEY_COMPLETE,
     POST_CREATE_LOG_MONEY_COMPLETE} from "../../actionTypes";
     
 import { connect } from "react-redux";
-import { getLogsMoney,postCreateLogMoney} from "./action"
+import { getLogsMoney,postCreateLogMoney, postLogin} from "./action"
+import Loading from '../animations/Loading'
 
 class CoffeePage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            isLoading:false,
             logs: [],
             money: 0,
             add: false,
@@ -24,19 +26,19 @@ class CoffeePage extends React.Component {
 
     componentWillMount() {
         const { dispatch } = this.props;
-        dispatch(getLogsMoney())
+        dispatch(getLogsMoney());
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.coffee);
-
         switch (nextProps.coffee.type) {
             case GET_LOGS_MONEY_REQUEST:
-                this.setState({ isFetching: nextProps.coffee.isFetching});
-                console.log(nextProps.coffee.result);
+                this.setState({ isLoading: nextProps.coffee.isFetching});
                 break;
             case GET_LOGS_MONEY_COMPLETE:
-                this.setState({ logs: nextProps.coffee.result.data.logs, money:nextProps.coffee.result.data.money  });
-
+                this.setState({ 
+                    isLoading: nextProps.coffee.isFetching,
+                    logs: nextProps.coffee.result.data.logs, 
+                    money:nextProps.coffee.result.data.money
+                });
                 break;
             default:
                 return;
@@ -89,6 +91,45 @@ class CoffeePage extends React.Component {
         }
     }
     render() {
+        const {isLoading}=this.state;
+        const content=<Fragment>
+        <h2 className="sumMoney">{this.state.money}đ</h2>
+        <Row>
+            <Col>
+                <div className="wrap">
+                    {
+                        this.state.logs.map((items) => {
+                            if (items.type == "REDUCE") {
+                                return <div>
+                                    <Toast>
+                                        <ToastHeader icon="danger">
+                                            Trừ quỷ
+                                        </ToastHeader>
+                                        <ToastBody>
+                                            <div className={styles.describe}>{items.caption}</div>
+                                            <div className={styles.money}>-{items.money}đ</div>
+                                        </ToastBody>
+                                    </Toast>
+                                </div>
+                            } else if (items.type == "IN_CREATE") {
+                                return <div>
+                                    <Toast>
+                                        <ToastHeader icon="warning">
+                                            THÊM QUỶ
+                                        </ToastHeader>
+                                        <ToastBody>
+                                            <div className={styles.describe}>{items.caption}</div>
+                                            <div className={styles.money}>+{items.money}đ</div>
+                                        </ToastBody>
+                                    </Toast>
+                                </div>
+                            }
+                        })
+                    }
+                </div>
+            </Col>
+        </Row>
+        </Fragment>;
         return (
             <Fragment>
                 <Container>
@@ -96,42 +137,7 @@ class CoffeePage extends React.Component {
                     <Row className="client">
                         <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
                             <h1 className="title">CLIENT</h1>
-                            <h2 className="sumMoney">{this.state.money}đ</h2>
-                            <Row>
-                                <Col>
-                                    <div className="wrap">
-                                        {
-                                            this.state.logs.map((items) => {
-                                                if (items.type == "REDUCE") {
-                                                    return <div>
-                                                        <Toast>
-                                                            <ToastHeader icon="danger">
-                                                                Trừ quỷ
-                                                            </ToastHeader>
-                                                            <ToastBody>
-                                                                <div className={styles.describe}>{items.caption}</div>
-                                                                <div className={styles.money}>-{items.money}đ</div>
-                                                            </ToastBody>
-                                                        </Toast>
-                                                    </div>
-                                                } else if (items.type == "IN_CREATE") {
-                                                    return <div>
-                                                        <Toast>
-                                                            <ToastHeader icon="warning">
-                                                                THÊM QUỶ
-                                                            </ToastHeader>
-                                                            <ToastBody>
-                                                                <div className={styles.describe}>{items.caption}</div>
-                                                                <div className={styles.money}>+{items.money}đ</div>
-                                                            </ToastBody>
-                                                        </Toast>
-                                                    </div>
-                                                }
-                                            })
-                                        }
-                                    </div>
-                                </Col>
-                            </Row>
+                                {isLoading ? <Loading/> : content}
                             <hr />
                         </Col>
                     </Row>
