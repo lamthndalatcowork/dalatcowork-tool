@@ -6,30 +6,31 @@ import {connect} from 'react-redux';
 import { postLogin } from "./action";
 import Loading from '../animations/Loading2'
 class LoginCoffee extends React.Component {
-
     state = {
         isLoading:false,
-        isLoginFalse: true
+        error:null
     };
+    componentWillMount() {
+        let data = JSON.parse(localStorage.getItem('user'));
+        if(data){
+            const { dispatch } = this.props;
+            dispatch(postLogin(data));
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         switch (nextProps.login.type) {
             case POST_LOGIN_REQUEST:
                 this.setState({ isLoading: nextProps.login.isFetching});
-               
                 break;
             case POST_LOGIN_COMPLETE:
                 this.setState({ isLoading: nextProps.login.isFetching});
                 if(nextProps.login.result.data.success){
-                    this.props.history.push({
-                        pathname : '/coffee',
-                        state :{
-                            typeAccount: nextProps.login.result.data.success.type
-                        }
-                        } 
-                      );
+                    localStorage.setItem('user',JSON.stringify(nextProps.login.result.data.success));
+                    this.props.history.push('/coffee');
                 }
                 else{
-                    this.setState({isLoginFalse:false});
+                    this.setState({error:"Incorrect!!!"});
                 }
                 break;
             default:
@@ -44,21 +45,23 @@ class LoginCoffee extends React.Component {
         data.password=password;
         const { dispatch } = this.props;
         dispatch(postLogin(data));
-    }
+    };
     render() {
-        const {isLoading,isLoginFalse} = this.state;
+        const {isLoading,error} = this.state;
         const btnLogin=<button type="submit" className="login-form-btn" onClick={()=>this.onSubmitForm()}>Login</button>;
-        const alert=<Alert style={{margin: '0'}}color="warning">Incorrect!!!</Alert>;
+        const alert = error === null ? '': <Alert style={{margin: '0'}} color="warning">Incorrect!!!</Alert>;
         return (
             <Fragment>
                 <div className="container-login">
                     <div className="wrap-login">
-                        <span className="login-form-title">Account Login</span>
+                        {/*<span className="login-form-title">Account Login</span>*/}
+
                         <form className="login-form">
+                            <img className="text-center" src="http://www.pngmart.com/files/1/Coffee-Logo-PNG-Image.png" width={63} />
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <span className="input-group-text" id="basic-addon">
-                                    <i class="fas fa-user"></i>
+                                    <i className="fas fa-user"></i>
                                     </span>
                                 </InputGroupAddon>
                                 <Input placeholder="Username" id="inputUserName"  type="text" />
@@ -71,7 +74,7 @@ class LoginCoffee extends React.Component {
                                 </InputGroupAddon>
                                 <Input placeholder="******" id="inputPassword" type="password"/>
                             </InputGroup>
-                            {isLoginFalse ? '': alert}
+                            {alert}
                             {isLoading ? <Loading/> : btnLogin}
                         </form>
                     </div>
@@ -81,7 +84,7 @@ class LoginCoffee extends React.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    login: { ...state.coffee }
+    login: { ...state.login }
 });
 
 export default connect(mapStateToProps)(LoginCoffee)

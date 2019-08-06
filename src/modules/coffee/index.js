@@ -1,16 +1,18 @@
-import React, { Fragment } from "react";
+import React, { } from "react";
 import styles from "./stylesHome.css";
-import { Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import { Toast, ToastBody, ToastHeader, Container, Row, Col, Button, } from 'reactstrap';
 import {
     GET_LOGS_MONEY_COMPLETE,
     GET_LOGS_MONEY_REQUEST,
     POST_CREATE_LOG_MONEY_REQUEST,
-    POST_CREATE_LOG_MONEY_COMPLETE
+    POST_CREATE_LOG_MONEY_COMPLETE, DELETE_LOGS_MONEY_REQUEST, DELETE_LOGS_MONEY_COMPLETE
 } from "../../actionTypes";
 
 import { connect } from "react-redux";
-import { getLogsMoney, postCreateLogMoney, postLogin } from "./action"
+import {deleteLogById, getLogsMoney, postCreateLogMoney} from "./action"
 import Loading from '../animations/Loading'
+import AdminControlComponent from "./components/AdminControlComponent";
+import LogItemComponent from "./components/LogItemComponent";
 
 class CoffeePage extends React.Component {
 
@@ -20,173 +22,140 @@ class CoffeePage extends React.Component {
             isLoading: false,
             logs: [],
             money: 0,
-            add: false,
-            sub: false,
+            idDelete:null,
+            typeUser:"CLIENT",
         };
     }
-
 
     componentWillMount() {
         const { dispatch } = this.props;
         dispatch(getLogsMoney());
     }
     componentWillReceiveProps(nextProps) {
+        let {result} = nextProps.coffee;
         switch (nextProps.coffee.type) {
             case GET_LOGS_MONEY_REQUEST:
                 this.setState({ isLoading: nextProps.coffee.isFetching });
                 break;
             case GET_LOGS_MONEY_COMPLETE:
+                if(!nextProps.login.result){
+                    this.props.history.push('/');
+                    return;
+                }
                 this.setState({
                     isLoading: nextProps.coffee.isFetching,
                     logs: nextProps.coffee.result.data.logs,
-                    money: nextProps.coffee.result.data.money
+                    money: nextProps.coffee.result.data.money,
+                    typeUser:nextProps.login.result.data.success.type
                 });
+                break;
+            case POST_CREATE_LOG_MONEY_REQUEST:
+                this.setState({ isLoading: nextProps.coffee.isFetching});
+                break;
+            case POST_CREATE_LOG_MONEY_COMPLETE:
+                let newLogs = this.state.logs;
+                newLogs.push(result.data.success.logs.data);
+                this.setState({
+                    isLoading: nextProps.coffee.isFetching,
+                    money:result.data.success.money,
+                    logs:newLogs
+                });
+                break;
+            case DELETE_LOGS_MONEY_COMPLETE:
+                if(result.data.success){
+                    let logs = this.state.logs;
+                    logs = logs.filter(item=>{
+                        return !(item._id === result.data.success.id)
+                    });
+                    this.setState({
+                        isLoading: nextProps.coffee.isFetching,
+                        money:result.data.success.money,
+                        logs:logs,
+                        idDelete:null
+                    });
+                }
+                else {
+                    alert("delete fail");
+                }
                 break;
             default:
                 return;
         }
     }
-
-    subFunction = () => {
-        this.setState(prevState => ({
-            sub: !prevState.sub
-        }));
-    }
-    addFunction = () => {
-        this.setState(prevState => ({
-            add: !prevState.add
-        }));
-    }
-    onAddBtnClick = () => {
-
-        let describe = document.getElementById("describeAdd").value;
-        let money = parseInt(document.getElementById("moneyAdd").value);
-        let type = "IN_CREATE";
-
-        const { dispatch } = this.props;
-
-        if (describe != null && money != null) {
-            let payload = {
-                "caption": describe,
-                "money": money,
-                "type": type
-            }
-            dispatch(postCreateLogMoney(payload));
+    onCreateLogsClick = (type) =>{
+        let describe,money;
+        type = type.toUpperCase();
+        if(type === "REDUCE"){
+            describe = document.getElementById("describeSub").value;
+            money = parseInt(document.getElementById("moneySub").value);
         }
-
-
-    }
-
-    onSubBtnClick = () => {
-
-        let describe = document.getElementById("describeSub").value;
-        let money = parseInt(document.getElementById("moneySub").value);
-        let type = "REDUCE"
+        if(type === "IN_CREATE"){
+            describe = document.getElementById("describeAdd").value;
+            money = parseInt(document.getElementById("moneyAdd").value);
+        }
         const { dispatch } = this.props;
         if (describe != null && money != null) {
             let payload = {
                 "caption": describe,
                 "money": money,
                 "type": type
-            }
+            };
             dispatch(postCreateLogMoney(payload));
+        }else{
+            alert("May be description or money is null");
         }
-    }
+    };
+    onBtnLogoutClick = () => {
+        localStorage.removeItem("user");
+        this.props.history.push('/');
+    };
+    getNumberFormat = (number) => {
+        return new Intl.NumberFormat('vn-IN', {}).format(number)+" đ"
+    };
+    onDeleteLogClick =(id)=>{
+        this.setState({idDelete:id});
+        const { dispatch } = this.props;
+        dispatch(deleteLogById(id));
+    };
     render() {
-        const { isLoading } = this.state;
-        const adminControls =
-            <Fragment>
-                <div className="button">
-                    <Button color="warning" onClick={this.addFunction} className="add">+</Button>{' '}
-                    <Button color="danger" onClick={this.subFunction} className="sub">-</Button>{' '}
-                </div>
+        const { isLoading,logs,money,typeUser,idDelete} = this.state;
+        const adminControls = <AdminControlComponent onCreateLogsClick={this.onCreateLogsClick}/>;
 
-                {/* Modal */}
-                <div>
-                    <Modal isOpen={this.state.add} toggle={this.addFunction} className={this.props.className}>
-                        <ModalHeader toggle={this.addFunction}>THÊM QUỶ</ModalHeader>
-                        <ModalBody>
-                            <Label for="">Mô tả</Label>
-                            <Input id="describeAdd" type="textarea" rows={3} />
-
-                            <Label for="">Tiền</Label>
-                            <Input id="moneyAdd" type="number" />
-                        </ModalBody>
-
-                        <ModalFooter>
-                            <Button id="btnAdd" color="primary" onClick={this.onAddBtnClick}>Thêm</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
-                </div>
-                <div>
-                    <Modal isOpen={this.state.sub} toggle={this.subFunction} className={this.props.className}>
-                        <ModalHeader toggle={this.subFunction}>TRỪ QUỶ</ModalHeader>
-                        <ModalBody>
-                            <Label for="">Mô tả</Label>
-                            <Input id="describeSub" type="textarea" rows={3} />
-                            <Label for="">Tiền</Label>
-                            <Input id="moneySub" type="number" />
-                        </ModalBody>
-
-                        <ModalFooter>
-                            <Button color="primary" onClick={this.onSubBtnClick}>Thêm</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
-                </div>
-            </Fragment>;
-        const content = <Container>
-            <Row>
-                <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4 }} >
-                    <h1 className="title">{this.props.location.state.typeAccount}</h1>
-                    <h2 className="sumMoney">{this.state.money}đ</h2>
-                    <Row>
-                        <Col>
-                            <div className="wrap">
-                                {
-                                    this.state.logs.map((items) => {
-                                        if (items.type == "IN_CREATE") {
-                                            return <div>
-                                                <Toast>
-                                                    <ToastHeader icon="warning">
-                                                        THÊM QUỶ
-                                                </ToastHeader>
-                                                    <ToastBody>
-                                                        <div className={styles.describe}>{items.caption}</div>
-                                                        <div className={styles.money}>+{items.money}đ</div>
-                                                    </ToastBody>
-                                                </Toast>
-                                            </div>
-                                        }
-                                        else if (items.type == "REDUCE") {
-                                            return <div>
-                                                <Toast>
-                                                    <ToastHeader icon="danger">
-                                                        Trừ quỷ
-                                                </ToastHeader>
-                                                    <ToastBody>
-                                                        <div className={styles.describe}>{items.caption}</div>
-                                                        <div className={styles.money}>-{items.money}đ</div>
-                                                    </ToastBody>
-                                                </Toast>
-                                            </div>
-                                        }
-
-                                    })
-                                }
-                            </div>
-                            {this.props.location.state.typeAccount=='ADMIN' ? adminControls: ''}
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </Container>;
-        return (
-            isLoading ? <Loading /> : content
-        )
+        return(
+            <Container>
+                <Row>
+                    <Col md={12} className="mt-3" >
+                        <div className="float-right">
+                            <Button onClick={this.onBtnLogoutClick}>Log out</Button>
+                        </div>
+                    </Col>
+                    <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} >
+                        {/*<h1 className="title">{typeUser}</h1>*/}
+                        <h2 className="sumMoney">{this.getNumberFormat(money)}</h2>
+                        {
+                            isLoading ?
+                                <Loading /> :
+                                <div className="wrap">
+                                    {
+                                        logs.map((item,index) => {
+                                            if(item._id === idDelete){
+                                                return <Loading/>
+                                            }
+                                            return <LogItemComponent log={item} keu={index} onDelete={this.onDeleteLogClick}/>
+                                        })
+                                    }
+                                </div>
+                        }
+                        {typeUser === 'ADMIN' ? adminControls: ''}
+                    </Col>
+                </Row>
+            </Container>
+            )
     }
 }
 
 const mapStateToProps = (state) => ({
+    login:{...state.login},
     coffee: { ...state.coffee }
 });
 

@@ -1,12 +1,16 @@
 body {
     font-family: 'Montserrat', sans-serif;
+    background-image: url(https://cdn.pixabay.com/photo/2017/02/07/09/02/wood-2045379_960_720.jpg);
+    background-size: cover;
+    background-position: center;
 }
 .wrap{
     overflow-y: scroll;
     height: 57vh;
-    border: 1px solid rgb(223, 215, 215);
+    /*border: 1px solid rgb(223, 215, 215);*/
     margin-top: 10px;
     margin-bottom: 20px;
+    padding: 0px 10px;
 }
 
 .title{
@@ -17,10 +21,11 @@ body {
     padding: 0px;
 }
 .sumMoney{
-    font-size: 35px;
+    font-size: 3rem;
     text-align: center;
-    margin: 0px;
-    padding: 0px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color:white;
 }
 
 .add{
@@ -32,8 +37,38 @@ body {
     width: 70px;
     
 }
-.button{
-    width: 100%;
-    justify-content: center;
-    justify-items: center;
+.describe{
+    font-size: 18px;
+}
+.money{
+    font-size: 20px;
+    font-weight: bold;
+}
+.deleteButton{
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    font-size: 30px;
+    color: #f56767;
+
+}
+.btn{
+    min-width: 160px;
+    height:40px;
+    border-radius:20px;
+    outline:none !important;
+    border:none;
+    font-size: 18px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.btnAdd{
+    background: -webkit-linear-gradient(left, #eae92a, #37d045, #2dc4e2);
+}
+.btnSub{
+    background: -webkit-linear-gradient(left, #e4475c, #d55274, #8961c8);
+}
+.toast{
+    max-width: none;
 }
