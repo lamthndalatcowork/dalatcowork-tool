@@ -4,24 +4,32 @@ import './styles.css';
 import {POST_LOGIN_REQUEST,POST_LOGIN_COMPLETE} from "../../actionTypes";
 import {connect} from 'react-redux';
 import { postLogin } from "./action";
-import Loading from '../animations/Loading'
+import Loading from '../animations/Loading2'
 class LoginCoffee extends React.Component {
 
     state = {
-        isLoading:false
+        isLoading:false,
+        isLoginFalse: true
     };
     componentWillReceiveProps(nextProps) {
         switch (nextProps.login.type) {
             case POST_LOGIN_REQUEST:
                 this.setState({ isLoading: nextProps.login.isFetching});
+               
                 break;
             case POST_LOGIN_COMPLETE:
                 this.setState({ isLoading: nextProps.login.isFetching});
                 if(nextProps.login.result.data.success){
-                    this.props.history.push('/coffee');
+                    this.props.history.push({
+                        pathname : '/coffee',
+                        state :{
+                            typeAccount: nextProps.login.result.data.success.type
+                        }
+                        } 
+                      );
                 }
                 else{
-                   alert('False');
+                    this.setState({isLoginFalse:false});
                 }
                 break;
             default:
@@ -38,21 +46,22 @@ class LoginCoffee extends React.Component {
         dispatch(postLogin(data));
     }
     render() {
-        const {isLoading} = this.state;
-        const btnLogin=<button className="login-form-btn" onClick={()=>this.onSubmitForm()}>Login</button>;
+        const {isLoading,isLoginFalse} = this.state;
+        const btnLogin=<button type="submit" className="login-form-btn" onClick={()=>this.onSubmitForm()}>Login</button>;
+        const alert=<Alert style={{margin: '0'}}color="warning">Incorrect!!!</Alert>;
         return (
             <Fragment>
                 <div className="container-login">
                     <div className="wrap-login">
                         <span className="login-form-title">Account Login</span>
-                        <div className="login-form">
+                        <form className="login-form">
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <span className="input-group-text" id="basic-addon">
                                     <i class="fas fa-user"></i>
                                     </span>
                                 </InputGroupAddon>
-                                <Input placeholder="Username" id="inputUserName" />
+                                <Input placeholder="Username" id="inputUserName"  type="text" />
                             </InputGroup>
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
@@ -60,10 +69,11 @@ class LoginCoffee extends React.Component {
                                     <i className="fas fa-lock"></i>
                                 </span>
                                 </InputGroupAddon>
-                                <Input placeholder="******" id="inputPassword"/>
+                                <Input placeholder="******" id="inputPassword" type="password"/>
                             </InputGroup>
+                            {isLoginFalse ? '': alert}
                             {isLoading ? <Loading/> : btnLogin}
-                        </div>
+                        </form>
                     </div>
                 </div>
             </Fragment>
