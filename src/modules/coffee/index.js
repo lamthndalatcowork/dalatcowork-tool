@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
 import styles from "./stylesHome.css";
-import { Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
-import {GET_LOGS_MONEY_COMPLETE, 
+import { Toast, ToastBody, ToastHeader, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from 'reactstrap';
+import {
+    GET_LOGS_MONEY_COMPLETE,
     GET_LOGS_MONEY_REQUEST,
     POST_CREATE_LOG_MONEY_REQUEST,
-    POST_CREATE_LOG_MONEY_COMPLETE} from "../../actionTypes";
-    
+    POST_CREATE_LOG_MONEY_COMPLETE
+} from "../../actionTypes";
+
 import { connect } from "react-redux";
 import { getLogsMoney,postCreateLogMoney, postLogin} from "./action"
 import Loading from '../animations/Loading'
@@ -22,7 +24,6 @@ class CoffeePage extends React.Component {
             sub: false,
         };
     }
-
 
     componentWillMount() {
         const { dispatch } = this.props;
@@ -55,39 +56,39 @@ class CoffeePage extends React.Component {
             add: !prevState.add
         }));
     }
-    onAddBtnClick = ()=>{
+    onAddBtnClick = () => {
 
         let describe = document.getElementById("describeAdd").value;
-        let money =parseInt(document.getElementById("moneyAdd").value);
+        let money = parseInt(document.getElementById("moneyAdd").value);
         let type = "IN_CREATE";
 
         const { dispatch } = this.props;
 
-        if(describe!=null && money!=null){
+        if (describe != null && money != null) {
             let payload = {
                 "caption": describe,
                 "money": money,
                 "type": type
             }
-            dispatch(postCreateLogMoney(payload)); 
+            dispatch(postCreateLogMoney(payload));
         }
-        
-        
+
+
     }
 
-    onSubBtnClick = ()=>{
+    onSubBtnClick = () => {
 
         let describe = document.getElementById("describeSub").value;
-        let money =parseInt(document.getElementById("moneySub").value);
+        let money = parseInt(document.getElementById("moneySub").value);
         let type = "REDUCE"
         const { dispatch } = this.props;
-        if(describe!=null && money!=null){
+        if (describe != null && money != null) {
             let payload = {
                 "caption": describe,
                 "money": money,
                 "type": type
             }
-            dispatch(postCreateLogMoney(payload)); 
+            dispatch(postCreateLogMoney(payload));
         }
     }
     render() {
@@ -177,8 +178,8 @@ class CoffeePage extends React.Component {
                                                             </ToastBody>
                                                         </Toast>
                                                     </div>
-                                                } 
-                                                
+                                                }
+
                                             })
                                         }
                                     </div>
@@ -196,7 +197,7 @@ class CoffeePage extends React.Component {
                                     <ModalBody>
                                         <Label for="">Mô tả</Label>
                                         <Input id="describeAdd" type="textarea" rows={3} />
-                                        
+
                                         <Label for="">Tiền</Label>
                                         <Input id="moneyAdd" type="number" />
                                     </ModalBody>
@@ -213,7 +214,7 @@ class CoffeePage extends React.Component {
                                         <Label for="">Mô tả</Label>
                                         <Input id="describeSub" type="textarea" rows={3} />
                                         <Label for="">Tiền</Label>
-                                        <Input  id="moneySub" type="number" />
+                                        <Input id="moneySub" type="number" />
                                     </ModalBody>
 
                                     <ModalFooter>
