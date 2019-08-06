@@ -12,7 +12,7 @@ class LogItemComponent extends React.Component {
     };
 
     render() {
-        let {log} = this.props;
+        let {log,typeUser} = this.props;
         return (
             <Fragment>
                     <Toast >
@@ -21,7 +21,11 @@ class LogItemComponent extends React.Component {
                         <ToastBody className="position-relative">
                             <div className="describe">{log.caption}</div>
                             <div className="money">{log.type==="IN_CREATE"?"+":"-"}{this.getNumberFormat(log.money)}</div>
-                            <div className="deleteButton" onClick={()=>{this.props.onDelete(log._id)}}><i className="fas fa-times-circle"></i></div>
+                            {
+                                typeUser === "ADMIN"?
+                                    <div className="deleteButton" onClick={()=>{this.props.onDelete(log._id)}}><i className="fas fa-times-circle"></i></div>
+                                    : ""
+                            }
                         </ToastBody>
                     </Toast>
             </Fragment>

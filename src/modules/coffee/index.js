@@ -141,7 +141,7 @@ class CoffeePage extends React.Component {
                                             if(item._id === idDelete){
                                                 return <Loading/>
                                             }
-                                            return <LogItemComponent log={item} keu={index} onDelete={this.onDeleteLogClick}/>
+                                            return <LogItemComponent typeUser={typeUser} log={item} key={index} onDelete={this.onDeleteLogClick}/>
                                         })
                                     }
                                 </div>
