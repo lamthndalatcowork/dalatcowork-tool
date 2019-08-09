@@ -5,6 +5,7 @@ import {POST_LOGIN_REQUEST,POST_LOGIN_COMPLETE} from "../../actionTypes";
 import {connect} from 'react-redux';
 import { postLogin } from "./action";
 import Loading from '../animations/Loading2'
+import logoImage from './logo-coffee.png'
 class LoginCoffee extends React.Component {
     state = {
         isLoading:false,
