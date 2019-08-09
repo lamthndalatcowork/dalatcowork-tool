@@ -28,8 +28,16 @@ class CoffeePage extends React.Component {
     }
 
     componentWillMount() {
+        let data = JSON.parse(localStorage.getItem('user'));
+        if(!data){
+            this.props.history.push('/');
+        }
+        else{
+            this.setState({typeUser:data.type});
+        }
         const { dispatch } = this.props;
         dispatch(getLogsMoney());
+        
     }
     componentWillReceiveProps(nextProps) {
         let {result} = nextProps.coffee;
@@ -38,15 +46,11 @@ class CoffeePage extends React.Component {
                 this.setState({ isLoading: nextProps.coffee.isFetching });
                 break;
             case GET_LOGS_MONEY_COMPLETE:
-                if(!nextProps.login.result){
-                    this.props.history.push('/');
-                    return;
-                }
+               
                 this.setState({
                     isLoading: nextProps.coffee.isFetching,
                     logs: nextProps.coffee.result.data.logs,
                     money: nextProps.coffee.result.data.money,
-                    typeUser:nextProps.login.result.data.success.type
                 });
                 break;
             case POST_CREATE_LOG_MONEY_REQUEST:
@@ -107,7 +111,7 @@ class CoffeePage extends React.Component {
     };
     onBtnLogoutClick = () => {
         localStorage.removeItem("user");
-        this.props.history.push('/');
+        this.props.history.push('/login');
     };
     getNumberFormat = (number) => {
         return new Intl.NumberFormat('vn-IN', {}).format(number)+" đ"
@@ -126,7 +130,7 @@ class CoffeePage extends React.Component {
                 <Row>
                     <Col md={12} className="mt-3" >
                         <div className="float-right">
-                            <Button onClick={this.onBtnLogoutClick}>Log out</Button>
+                            <Button onClick={this.onBtnLogoutClick}>{typeUser === 'ADMIN' ? 'Logout': 'Login'}</Button>
                         </div>
                     </Col>
                     <Col sm={{ size: 8, offset: 2 }} md={{ size: 6, offset: 3 }} >

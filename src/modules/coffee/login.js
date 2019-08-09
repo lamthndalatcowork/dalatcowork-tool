@@ -27,7 +27,7 @@ class LoginCoffee extends React.Component {
                 this.setState({ isLoading: nextProps.login.isFetching});
                 if(nextProps.login.result.data.success){
                     localStorage.setItem('user',JSON.stringify(nextProps.login.result.data.success));
-                    this.props.history.push('/coffee');
+                    this.props.history.push('/');
                 }
                 else{
                     this.setState({error:"Incorrect!!!"});
@@ -54,10 +54,8 @@ class LoginCoffee extends React.Component {
             <Fragment>
                 <div className="container-login">
                     <div className="wrap-login">
-                        {/*<span className="login-form-title">Account Login</span>*/}
-
                         <form className="login-form">
-                            <img className="text-center" src="http://www.pngmart.com/files/1/Coffee-Logo-PNG-Image.png" width={63} />
+                            <a href="/" title="Home"><img className="text-center" src="http://www.pngmart.com/files/1/Coffee-Logo-PNG-Image.png" width={63} /></a>
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <span className="input-group-text" id="basic-addon">

@@ -12,7 +12,7 @@ const routes = [
         routes: [
             {
                 path: "/",
-                component: LoginCoffee,
+                component: CoffeePage,
                 exact: true
             },
             {
@@ -21,8 +21,8 @@ const routes = [
                 exact: true
             },
             {
-                path: "/coffee",
-                component: CoffeePage,
+                path: "/login",
+                component: LoginCoffee,
                 exact: true
             },
             {
