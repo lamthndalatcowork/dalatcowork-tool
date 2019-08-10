@@ -1,4 +1,3 @@
-import HomePage from "./modules/home";
 import errors from "./modules/errors";
 import Root from "./modules/Root";
 import Question from "./modules/questions";
@@ -6,13 +5,14 @@ import UserPage from "./modules/userPage";
 import LoginCoffee from "./modules/coffee/login";
 import CoffeePage from "./modules/coffee";
 
+
 const routes = [
     {
         component: Root,
         routes: [
             {
                 path: "/",
-                component: HomePage,
+                component: CoffeePage,
                 exact: true
             },
             {
@@ -21,16 +21,10 @@ const routes = [
                 exact: true
             },
             {
-                path: "/coffee/login",
+                path: "/login",
                 component: LoginCoffee,
                 exact: true
             },
-            {
-                path: "/coffee",
-                component: CoffeePage,
-                exact: true
-            },
-
             {
                 path: "/trang_chu",
                 component: UserPage,
