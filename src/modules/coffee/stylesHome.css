@@ -1,0 +1,75 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-image: url('./coffee-background-2.png');
+    background-size: 162px 120vh;
+    background-repeat: repeat-x;
+    background-position: center;
+}
+.wrap{
+    overflow-y: scroll;
+    height: 57vh;
+    /*border: 1px solid rgb(223, 215, 215);*/
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 0px 10px;
+}
+
+.title{
+    color: red;
+    font-size: 40px;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+.sumMoney{
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color:white;
+}
+
+.add{
+    width: 70px;
+    justify-items: center;
+}
+
+.sub{
+    width: 70px;
+    
+}
+.describe{
+    font-size: 18px;
+}
+.money{
+    font-size: 20px;
+    font-weight: bold;
+}
+.deleteButton{
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    font-size: 30px;
+    color: #f56767;
+
+}
+.btn{
+    min-width: 160px;
+    height:40px;
+    border-radius:20px;
+    outline:none !important;
+    border:none;
+    font-size: 18px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.btnAdd{
+    background: -webkit-linear-gradient(left, #eae92a, #37d045, #2dc4e2);
+}
+.btnSub{
+    background: -webkit-linear-gradient(left, #e4475c, #d55274, #8961c8);
+}
+.toast{
+    max-width: none;
+}

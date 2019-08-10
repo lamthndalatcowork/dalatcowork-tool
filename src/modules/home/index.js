@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {loadHome} from "./actions";
 import LoadingAnimation from "../animations/Loading";
 import {HOME_COMPLETE, HOME_REQUEST} from "../../actionTypes";
-
+import { Button } from 'reactstrap';
 class HomePage extends React.Component {
     state = {
         isLoading: false
@@ -34,6 +34,7 @@ class HomePage extends React.Component {
             <Fragment>
                 <h1 className={styles.title}>Home</h1>
                 <div>This is home</div>
+                <Button color="danger">Danger!</Button>
             </Fragment>
         );
         return (isLoading ? <LoadingAnimation/> : <Content/>)
